@@ -100,7 +100,7 @@ public class ChatController {
     }
 
     /**
-     * 好友申请的消息通知列表
+     * 好友申请的消息通知列表, 查数据库
      */
     @ResponseBody
     @GetMapping("/notification")

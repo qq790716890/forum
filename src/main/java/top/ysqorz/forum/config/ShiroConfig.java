@@ -49,7 +49,7 @@ public class ShiroConfig {
     /**
      * https://zhuanlan.zhihu.com/p/143126919
      * 在引入spring aop（比如在controller类上加上@Validaed注解）的情况下
-     * 在@controller注解的类的方法中使用@RequirseRole等权限注解，
+     * 在@controller注解的类的方法中使用@RequiresRole等权限注解，
      * 会导致该方法无法映射请求，导致404
      * 将usePrefix和proxyTargetClass二者任意一值设为true都可以解决无法映射请求的问题
      */

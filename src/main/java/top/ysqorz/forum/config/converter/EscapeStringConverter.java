@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.util.HtmlUtils;
 
 /**
+ * HTML 转义
  * @author passerbyYSQ
  * @create 2021-02-22 23:15
  */

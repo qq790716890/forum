@@ -91,6 +91,9 @@ public class ChatServiceImpl implements ChatService {
             boolean isOnline = redisService.isUserOnline(userCard.getUserId());
             userCard.setStatus(isOnline ? "online" : "offline");
         }
+
+        // LZY: 添加 status 支持
+
         // 注意，userCards中无丢失了分页信息，userList中才有分页信息
         // PageData<ChatUserCardDTO> pageData = new PageData<>(userCards);
         return new PageData<>(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getTotal(), userCards);

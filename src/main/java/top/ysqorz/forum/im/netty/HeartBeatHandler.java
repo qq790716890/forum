@@ -31,6 +31,7 @@ public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
             String channelId = channel.id().asLongText();
 
             if (event.state() == IdleState.ALL_IDLE) {
+                // 这里判断出 idle 状态了，没有执行 fireUserEventTriggered 就不会传递到后面的 handler
                 log.info("channel进入[读写]空闲状态：{}", channelId);
                 Integer allIdleCount = channel.attr(IMUtils.ALL_IDLE_KEY).get();
                 if (Integer.valueOf(3).equals(allIdleCount)) { // >=3

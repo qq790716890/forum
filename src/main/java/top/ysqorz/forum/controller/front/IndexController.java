@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.ysqorz.forum.common.StatusCode;
-import top.ysqorz.forum.common.annotation.ApiAccessLimit;
+
 import top.ysqorz.forum.common.exception.ServiceFailedException;
 import top.ysqorz.forum.dto.PageData;
 import top.ysqorz.forum.dto.req.QueryPostCondition;

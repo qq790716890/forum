@@ -31,7 +31,7 @@ public class SimpleUserDTO {
 
     private Integer blackId; // 当前是否处于封禁  ！！！
 
-    private Integer newMeg;//新消息 ！！！
+    private Integer newMeg;//新消息数量 ！！！
 
     public SimpleUserDTO(User user) {
         BeanUtils.copyProperties(user, this);
