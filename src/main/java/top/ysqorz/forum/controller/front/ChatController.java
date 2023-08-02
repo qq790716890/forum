@@ -38,9 +38,11 @@ import java.util.Map;
 public class ChatController {
     @Resource
     private ChatService chatService;
-    // 暂时使用阿里云OSS
+//    // 暂时使用阿里云OSS
+//    @Resource
+//    private UploadRepository aliyunOssRepository;
     @Resource
-    private UploadRepository aliyunOssRepository;
+    private UploadRepository localRepository;
 
     /**
      * 个人中心私聊页面
@@ -75,7 +77,7 @@ public class ChatController {
     }
 
     /**
-     * 查找用户，添加好友。暂不支持状态（在线/离线）条件
+     * 查找用户，添加好友。
      *
      * @param keyword 关键词。手机号，邮箱，用户名
      * @param status  状态。all, online, offline
@@ -232,7 +234,7 @@ public class ChatController {
     @PostMapping("/upload/image")
     public ResultModel<Map<String, Object>> uploadChatImage(@RequestParam(name = "file") @NotNull MultipartFile image)
             throws IOException {
-        ImageUploader imageUploader = new ImageUploader(image, aliyunOssRepository);
+        ImageUploader imageUploader = new ImageUploader(image, localRepository);
         UploadResult uploaded = imageUploader.upload();
         Map<String, Object> data = new HashMap<>();
         data.put("src", uploaded.getUrl()[0]);

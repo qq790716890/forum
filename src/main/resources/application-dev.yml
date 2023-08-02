@@ -45,7 +45,7 @@ oauth:
   qq:
     client-id: 101996626
     client-secret: 8715aaaa127302290226cf200976da3c
-    redirect-uri: https://localhost:8080/user/oauth/qq/callback
+    redirect-uri: https://124.222.179.228:8080/user/oauth/qq/callback
     po-field: qqId
   baidu:
     client-id: tUYUGza9SlrBvXY3CcqViLEfrzHkGIlD

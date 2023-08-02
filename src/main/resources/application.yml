@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   servlet:
     multipart:
       max-file-size: 100MB
@@ -72,8 +74,7 @@ spring:
   thymeleaf:
     # 开发时关闭缓存
     cache: false
-  profiles:
-    active: dev
+
 
 mybatis:
   # xxMapper.xml文件在resources/mybatis/mapper下

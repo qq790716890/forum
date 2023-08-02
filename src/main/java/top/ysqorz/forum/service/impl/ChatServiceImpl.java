@@ -62,7 +62,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     /**
-     * TODO 暂不支持状态条件的筛选，故status暂时没用到
+     *
      */
     @Override
     public PageData<ChatUserCardDTO> getChatUserCards(String keyword, String status, Integer page, Integer count) {
@@ -93,7 +93,9 @@ public class ChatServiceImpl implements ChatService {
         }
 
         // LZY: 添加 status 支持
-
+        if (!status.equals("all")){
+            userCards = userCards.stream().filter(a->a.getStatus().equals(status)).collect(Collectors.toList());
+        }
         // 注意，userCards中无丢失了分页信息，userList中才有分页信息
         // PageData<ChatUserCardDTO> pageData = new PageData<>(userCards);
         return new PageData<>(pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getTotal(), userCards);

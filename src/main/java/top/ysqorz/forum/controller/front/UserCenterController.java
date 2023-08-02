@@ -38,9 +38,10 @@ public class UserCenterController {
     @Resource
     private UserService userService;
     // 为了方便不同组员开发，使用阿里云OSS
+//    @Resource
+//    private UploadRepository aliyunOssRepository;
     @Resource
-    private UploadRepository aliyunOssRepository;
-
+    private UploadRepository localRepository;
     @Resource
     private MessageService messageService;
 
@@ -110,7 +111,7 @@ public class UserCenterController {
     @PostMapping("/uploadFaceImage")
     @ResponseBody
     public UploadResult uploadFaceImage(@NotBlank String imageBase64) throws IOException {
-        ImageUploader imageUploader = new ImageUploader(imageBase64, aliyunOssRepository);
+        ImageUploader imageUploader = new ImageUploader(imageBase64, localRepository);
         UploadResult uploadResult = imageUploader.uploadBase64();
         User record = new User();
         record.setId(ShiroUtils.getUserId())
