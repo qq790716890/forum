@@ -1,15 +1,14 @@
 package top.ysqorz.forum.upload;
 
 import net.coobird.thumbnailator.Thumbnails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 
 /**
  * @author passerbyYSQ
@@ -18,11 +17,14 @@ import java.io.InputStream;
 @Component
 public class LocalRepository implements UploadRepository {
 
+    @Value("${upload.local.path}")
+    private String uploadPath;
+
     @Override
     public String[] uploadImage(InputStream inputStream, String filename) {
         try {
-            File staticDir = ResourceUtils.getFile("classpath:static");
-            File destDir = new File(staticDir, "upload/images");
+            File destDir = new File(uploadPath);
+
             if (!destDir.exists()) {
                 destDir.mkdirs(); // 递归创建创建多级
             }
@@ -42,6 +44,26 @@ public class LocalRepository implements UploadRepository {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public void getImage(String fileName, HttpServletResponse response) throws IOException {
+        fileName = uploadPath + "/" + fileName;
+        String suffix = fileName.substring(fileName.lastIndexOf('.'));
+        response.setContentType("image/" + suffix);
+
+        try (
+                FileInputStream fis = new FileInputStream(fileName);
+                OutputStream os = response.getOutputStream();
+        ) {
+            byte[] buffer = new byte[1024];
+            int b = 0;
+            while ((b = fis.read(buffer)) != -1) {
+                os.write(buffer, 0, b);
+            }
+        } catch (IOException e) {
+            throw new IOException("读取图片失败");
         }
     }
 

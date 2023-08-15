@@ -11,8 +11,8 @@
     <li class="layui-nav-item" th:class="'layui-nav-item' + ${page == 'home' ? ' layui-this' : ''}">
         <a th:href="@{/user/center/home}" href="home"><i class="layui-icon">&#xe609;</i>我的主页</a>
     </li>
-    <li class="layui-nav-item">
-        <a href="index"><i class="layui-icon">&#xe612;</i>用户中心</a>
+    <li class="layui-nav-item" th:class="'layui-nav-item' + ${page == 'index' ? ' layui-this' : ''}">
+        <a th:href="@{/user/center/index}" href="index"><i class="layui-icon">&#xe612;</i>用户中心</a>
     </li>
     <li class="layui-nav-item" th:class="'layui-nav-item' + ${page == 'set' ? ' layui-this' : ''}">
         <a th:href="@{/user/center/set}" href="set"><i class="layui-icon">&#xe620;</i>基本设置</a>
@@ -31,6 +31,27 @@
         <a th:href="@{/chat}"><i class="layui-icon">&#xe611;</i>在线聊天</a>
     </li>
 </ul>
+
+<!-- 发表新帖 那一行的共享 -->
+<ul class="layui-clear" th:fragment="indexRow(topics, loginInfo)">
+    <li class="layui-hide-xs layui-this"><a href="/" class="tark">首页</a></li>
+    <!--      <li><a href="jie/index.html">提问</a></li>-->
+    <!--      <li><a href="jie/index.html">分享<span class="layui-badge-dot"></span></a></li>-->
+
+    <li th:each="topic : ${topics}">
+        <a href="javascript:void(0);" th:onclick="topicsort(this,[[${topic.id}]])" class="tark"
+           th:text="${topic.topicName}">Onions</a>
+    </li>
+
+    <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
+
+    <!-- 用户登入后显示 -->
+    <li th:if="${loginInfo !=null}" class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a
+            th:href="@{/user/center/index}">我发表的贴</a></li>
+    <li th:if="${loginInfo !=null}" class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a
+            th:href="@{/user/center/index}">我收藏的贴</a></li>
+</ul>
+
 <!-- user center sidebar end -->
 
 <!-- user center hide dom start -->
@@ -49,12 +70,12 @@
 <!-- front footer start -->
 <div class="fly-footer" th:fragment="frontFooter">
     <p>Copyright <span th:text="${#dates.year(#dates.createNow())}">2021</span> &copy;
-        <a href="https://blog.csdn.net/qq_43290318">passerbyYSQ</a>.&nbsp;
+        <a href="">LZY</a>.&nbsp;
         All Rights Reserved |
         <a href="https://beian.miit.gov.cn" target="_blank">粤ICP备2022016587号</a>
     </p>
     <p>
-        Powered by passerbyYSQ 1127664027@qq.com
+        Powered by passerbyLZY 79071689@qq.com
     </p>
 </div>
 <!-- front footer end -->
@@ -67,22 +88,23 @@
         </a>
         <ul class="layui-nav fly-nav-user">
             <!-- 未登入的状态 -->
-            <li class="layui-nav-item" th:if="!${loginUser.id}">
+            <li class="layui-nav-item" th:if="!${loginUser?.id}">
                 <a th:href="@{/user/login}" target="_parent">登入</a>
             </li>
-            <li class="layui-nav-item" th:if="!${loginUser.id}">
+            <li class="layui-nav-item" th:if="!${loginUser?.id}">
                 <a th:href="@{/user/reg}" target="_parent">注册</a>
             </li>
-            <li class="layui-nav-item layui-hide-xs" th:if="!${loginUser.id}">
-                <a th:href="@{/user/oauth/qq/authorize}" target="_parent" class="myiconfont icon-QQ"
+<!--            qq auth 登录 -->
+            <li class="layui-nav-item layui-hide-xs" th:if="!${loginUser?.id}">
+                <a th:href="@{/user/oauth/qq/authorize} " target="_parent" class="myiconfont icon-QQ"
                    style="font-size: 22px;"></a>
             </li>
-            <li class="layui-nav-item layui-hide-xs" th:if="!${loginUser.id}">
+            <li class="layui-nav-item layui-hide-xs" th:if="!${loginUser?.id}">
                 <a th:href="@{/user/oauth/gitee/authorize}" target="_parent" class="myiconfont icon-Gitee"
                    style="font-size: 22px;"></a>
             </li>
             <!-- 登入后的状态 -->
-            <li class="layui-nav-item" th:if="${loginUser.id}">
+            <li class="layui-nav-item" th:if="${loginUser?.id}">
                 <a class="fly-nav-avatar" href="javascript:;">
                     <cite class="layui-hide-xs" th:text="${loginUser.username}">贤心</cite>
                     <i class="lv" th:text="'Lv' + ${loginUser.level}">Lv3</i>

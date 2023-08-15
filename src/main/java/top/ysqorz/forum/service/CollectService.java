@@ -1,5 +1,7 @@
 package top.ysqorz.forum.service;
 
+import top.ysqorz.forum.dto.PageData;
+import top.ysqorz.forum.dto.resp.PostDTO;
 import top.ysqorz.forum.po.Collect;
 
 /**
@@ -14,4 +16,11 @@ public interface CollectService {
     Collect addCollect(Integer postId);
 
     int cancelCollect(Integer collectId, Integer postId);
+
+    int countCollectByUserId(Integer userId);
+
+    PageData<PostDTO> getCollectPostListByUserId(Integer userId, Integer page, Integer count);
+
+
+
 }

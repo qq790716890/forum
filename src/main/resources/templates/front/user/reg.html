@@ -288,10 +288,10 @@
             console.log(data.field);
             app.ajax('/user/reg', data.field, function (res) {
                 // 业务成功（业务状态码）的回调
-                app.successNotice("注册成功");
+                app.successNotice("注册成功，我们已经向您的邮箱发了一封邮件，请尽快激活！");
                 setTimeout(function () {
                     window.location = '/user/login';
-                }, 1000);
+                }, 2000);
             }, "post", function (res) {
                 // 业务失败的回调
                 // 模拟点击，刷新验证码

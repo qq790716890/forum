@@ -8,54 +8,84 @@
     <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
     <link rel="stylesheet" th:href="@{/front/res/layui/css/layui.css}" href="../res/layui/css/layui.css">
     <link rel="stylesheet" th:href="@{/front/res/css/global.css}" href="../res/css/global.css">
-    <link rel="stylesheet" th:href="@{/admin/assets/module/admin.css(v=318)}" href="admin/assets/module/admin.css?v=318">
+    <style>
+        .qeuotesty {
+            isplay: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+        }
 
+        .touxiang {
+            display: block;
+            margin-right: 10px;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            -ms-flex-negative: 0;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url(https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg);
+        }
+
+        .content {
+            color: #505050;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            font-size: 14px;
+            line-height: 15px;
+        }
+
+        .boot {
+            isplay: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            -webkit-box-pack: start;
+            -ms-flex-pack: start;
+            justify-content: flex-start;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            color: #999;
+            font-size: 12px;
+            line-height: 22px;
+        }
+
+        .mytent {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+    </style>
 </head>
-<body style="margin:0">
+<body>
 
-<div style="height:62px;">
-    <iframe scrolling="no" id="main" name="main" frameborder="0" th:src="@{/head}"
-            style="width:100%;height:100%;"></iframe>
-
-</div>
+<div th:replace="~{front/common/common :: frontHeader(${loginUser})}"></div>
 
 <div class="layui-container fly-marginTop fly-user-main">
-    <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
-        <li class="layui-nav-item">
-            <a href="home">
-                <i class="layui-icon">&#xe609;</i>
-                我的主页
-            </a>
-        </li>
-        <li class="layui-nav-item layui-this">
-            <a href="index">
-                <i class="layui-icon">&#xe612;</i>
-                用户中心
-            </a>
-        </li>
-        <li class="layui-nav-item">
-            <a href="set">
-                <i class="layui-icon">&#xe620;</i>
-                基本设置
-            </a>
-        </li>
-        <li class="layui-nav-item">
-            <a href="message">
-                <i class="layui-icon">&#xe611;</i>
-                我的消息
-            </a>
-        </li>
-    </ul>
-
-    <div class="site-tree-mobile layui-hide">
-        <i class="layui-icon">&#xe602;</i>
-    </div>
-    <div class="site-mobile-shade"></div>
-
-    <div class="site-tree-mobile layui-hide">
-        <i class="layui-icon">&#xe602;</i>
-    </div>
-    <div class="site-mobile-shade"></div>
+    <div th:replace="~{front/common/common :: userCenterSidebar('index')}"></div>
+    <div th:replace="~{front/common/common :: userCenterHideDom}"></div>
 
 
     <div class="fly-panel fly-panel-user" pad20>
@@ -66,74 +96,168 @@
         -->
         <div class="layui-tab layui-tab-brief" lay-filter="user">
             <ul class="layui-tab-title" id="LAY_mine">
-                <li data-type="mine-jie" lay-id="index" class="layui-this">我发的帖（<span>89</span>）</li>
-                <li data-type="collection" data-url="/collection/find/" lay-id="collection">我收藏的帖（<span>16</span>）</li>
+                <li data-type="mine-jie" lay-id="index" class="layui-this">我发的帖（<span th:text="${myPostCnt}">89</span>）</li>
+                <li data-type="collection" data-url="/collection/find/" lay-id="collection">我收藏的帖（<span th:text="${myCollectCnt}"> 16</span>）</li>
             </ul>
             <div class="layui-tab-content" style="padding: 20px 0;">
                 <div class="layui-tab-item layui-show">
-                    <ul class="mine-view jie-row">
-                        <li>
-                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                            <i>2017/3/14 上午8:30:00</i>
-                            <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-                            <em>661阅/10答</em>
-                        </li>
-                        <li>
-                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                            <i>2017/3/14 上午8:30:00</i>
-                            <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-                            <em>661阅/10答</em>
-                        </li>
-                        <li>
-                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                            <i>2017/3/14 上午8:30:00</i>
-                            <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-                            <em>661阅/10答</em>
-                        </li>
+                    <ul class="mine-view jie-row" id="postList">
+                        <!-- 数据将填充到这里 -->
                     </ul>
                     <div id="LAY_page"></div>
                 </div>
                 <div class="layui-tab-item">
-                    <ul class="mine-view jie-row">
-                        <li>
-                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                            <i>收藏于23小时前</i></li>
+                    <ul class="mine-view jie-row" id="collectionList">
+                        <!-- 数据将填充到这里 -->
                     </ul>
                     <div id="LAY_page1"></div>
                 </div>
+                <!--                <div class="layui-tab-item layui-show">-->
+                <!--                    <ul class="mine-view jie-row">-->
+                <!--                        <li>-->
+                <!--                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>-->
+                <!--                            <i>2017/3/14 上午8:30:00</i>-->
+                <!--                            <a class="mine-edit" href="/jie/edit/8116">编辑</a>-->
+                <!--                            <em>661阅/10答</em>-->
+                <!--                        </li>-->
+                <!--                        <li>-->
+                <!--                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>-->
+                <!--                            <i>2017/3/14 上午8:30:00</i>-->
+                <!--                            <a class="mine-edit" href="/jie/edit/8116">编辑</a>-->
+                <!--                            <em>661阅/10答</em>-->
+                <!--                        </li>-->
+                <!--                        <li>-->
+                <!--                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>-->
+                <!--                            <i>2017/3/14 上午8:30:00</i>-->
+                <!--                            <a class="mine-edit" href="/jie/edit/8116">编辑</a>-->
+                <!--                            <em>661阅/10答</em>-->
+                <!--                        </li>-->
+                <!--                    </ul>-->
+                <!--                    <div id="LAY_page"></div>-->
+                <!--                </div>-->
+                <!--                <div class="layui-tab-item">-->
+                <!--                    <ul class="mine-view jie-row">-->
+                <!--                        <li>-->
+                <!--                            <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>-->
+                <!--                            <i>收藏于23小时前</i></li>-->
+                <!--                    </ul>-->
+                <!--                    <div id="LAY_page1"></div>-->
+                <!--                </div>-->
             </div>
         </div>
     </div>
+
+
 </div>
 
-<div class="fly-footer">
-    <p><a href="http://fly.layui.com/" target="_blank">Fly社区</a> 2017 &copy; <a href="http://www.layui.com/"
-                                                                                target="_blank">layui.com 出品</a></p>
-    <p>
-        <a href="http://fly.layui.com/jie/3147/" target="_blank">付费计划</a>
-        <a href="http://www.layui.com/template/fly/" target="_blank">获取Fly社区模版</a>
-        <a href="http://fly.layui.com/jie/2461/" target="_blank">微信公众号</a>
-    </p>
-</div>
+<div th:replace="~{front/common/common :: frontFooter}"></div>
 
-<script src="admin/libs/layui/layui.all.js" th:src="@{/admin/assets/libs/layui/layui.all.js}"></script>
-<script src="admin/js/common.js?v=318" th:src="@{/admin/assets/js/common.js(v=318)}"></script>
+<!--帖子模板-->
+<script type="text/html" id="messtext">
+    <li style="height:28px">
+        {{# if(d.isHighQuality != 0){ }}
+        <span class="layui-bg-red layui-badge">精</span>
+        {{# } }}
+        <a href="/post/detail/{{d.id}}" class="jie-title">{{d.title}}</a>
+        <i>{{d.createTime}}</i>
+        <a class="mine-edit" href="/post/publish?postId={{d.id}}">编辑</a>
+        <em class="layui-hide-xs">{{d.visitCount}}访问/ {{d.commentCount}}评论</em>
+    </li>
+</script>
+
+<!--评论模板-->
+<script type="text/html" id="demoComment">
+    <!--    <li>-->
+    <!--        <p>-->
+    <!--            <span>{{d.createTime}}</span>-->
+    <!--            在<a href="/post/detail/{{d.id}}" target="_blank">{{d.postTitle}}</a>中评论：-->
+    <!--        </p>-->
+    <!--        <div class="home-dacontent ellipsis">-->
+    <!--            {{d.content}}-->
+    <!--        </div>-->
+    <!--    </li>-->
+    <li>
+        <a class="jie-title" href="/post/detail/{{d.id}}" target="_blank">{{d.title}}</a>
+        <em class="layui-hide-xs">收藏于{{d.createTime}} </em>
+    </li>
+</script>
+
+<script th:src="@{/front/res/layui/layui.js}" src="../res/layui/layui.js"></script>
+<script type="text/javascript" th:src="@{/admin/assets/libs/layui/layui.js}" src="assets/libs/layui/layui.js"></script>
+<script type="text/javascript" th:src="@{/admin/assets/js/common.js(v=318)}" src="assets/js/common.js?v=318"></script>
+
 <script>
-    layui.cache.page = 'user';
-    layui.cache.user = {
-        username: '游客'
-        , uid: -1
-        , avatar: '../../res/images/avatar/00.jpg'
-        , experience: 83
-        , sex: '男'
-    };
-    layui.config({
-        version: "3.0.0"
-        , base: '../../res/mods/'
-    }).extend({
-        fly: 'index'
-    }).use('fly');
+
+    layui.use(['layer', 'dataGrid', 'element', 'dropdown', 'app'], function () {
+        var $ = layui.jquery;
+        var app = layui.app;
+        var layer = layui.layer;
+        var dataGrid = layui.dataGrid;
+        var id = [[${information.id}]];
+
+
+        dataGrid.render({
+            elem: '#postList', // 将数据填充到这个元素
+            templet: '#messtext',
+            url: '/post/list/' + id,
+            response: {
+                statusCode: 2000 // 规定成功的状态码，默认：0
+            },
+            where: {conditions: 0},
+            parseData: function (res) {
+                var list = res.data.list;
+                list.map(item => {
+                    item.createTime = app.formatDateTime(item.createTime);
+                    return item;
+                });
+                return {
+                    "code": res.code,
+                    "msg": res.message,
+                    "count": res.data.total,
+                    "data": res.data.list
+                };
+            },
+            page: {limit: 3, limits: [3, 5, 10, 20, 30, 40]},
+            done: function () {
+                // 在数据加载完成后执行的操作
+                console.log("Data loading is done.");
+            }
+        });
+
+        dataGrid.render({
+            elem: '#collectionList', // 将数据填充到这个元素
+            templet: '#demoComment',
+            url: '/post/collect/list/' + id,
+            response: {
+                statusCode: 2000 // 规定成功的状态码，默认：0
+            },
+            where: {conditions: 0},
+            parseData: function (res) {
+                var list = res.data.list;
+                list.map(item => {
+                    item.createTime = app.formatDateTime(item.createTime);
+                    return item;
+                });
+                return {
+                    "code": res.code,
+                    "msg": res.message,
+                    "count": res.data.total,
+                    "data": res.data.list
+                };
+            },
+            page: {limit: 3, limits: [3, 5, 10, 20, 30, 40]},
+            done: function () {
+                // 在数据加载完成后执行的操作
+                console.log("Data loading is done.");
+            }
+        });
+
+
+    });
 </script>
 
 </body>
 </html>
+
+
+

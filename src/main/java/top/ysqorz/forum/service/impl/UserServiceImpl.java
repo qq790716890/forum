@@ -3,12 +3,17 @@ package top.ysqorz.forum.service.impl;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import tk.mybatis.mapper.entity.Example;
 import top.ysqorz.forum.common.Constant;
 import top.ysqorz.forum.common.StatusCode;
+import top.ysqorz.forum.common.enumeration.Activation;
 import top.ysqorz.forum.common.enumeration.Gender;
 import top.ysqorz.forum.common.exception.ParamInvalidException;
 import top.ysqorz.forum.dao.*;
@@ -29,6 +34,7 @@ import top.ysqorz.forum.shiro.JwtToken;
 import top.ysqorz.forum.shiro.ShiroUtils;
 import top.ysqorz.forum.utils.DateTimeUtils;
 import top.ysqorz.forum.utils.JwtUtils;
+import top.ysqorz.forum.utils.MailClient;
 import top.ysqorz.forum.utils.RandomUtils;
 
 import javax.annotation.Resource;
@@ -38,6 +44,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author 阿灿
@@ -69,6 +76,16 @@ public class UserServiceImpl implements UserService {
     private FirstCommentMapper firstCommentMapper;
     @Resource
     private CommentNotificationMapper commentNotificationMapper;
+
+    // 发邮件所需 的 两件套
+    @Autowired
+    private MailClient mailClient;
+
+    @Autowired
+    private TemplateEngine templateEngine;
+
+    @Value("${community.path.domain}")
+    private String domain;
 
 
     @Override
@@ -204,6 +221,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setEmail(dto.getEmail());
         user.setUsername(dto.getUsername().trim());
+        user.setActivationCode(UUID.randomUUID().toString().substring(0,12).replace("-",""));
 
         // 8个字符的随机字符串，作为加密登录的随机盐。
         String loginSalt = RandomUtils.generateStr(8);
@@ -225,6 +243,17 @@ public class UserServiceImpl implements UserService {
                 .setPhoto("/admin/assets/images/defaultUserPhoto.jpg");
 
         userMapper.insertSelective(user);
+
+        // 激活邮件
+        Context context = new Context();
+        context.setVariable("email", user.getEmail());
+        // http://localhost:8080/activation/101/code
+        String url = domain +  "/user/activation/" + user.getUsername() + "/" + user.getActivationCode(); //userId 会在添加入数据库后自动回写
+        context.setVariable("url", url);
+        // 将数据写入激活模板html，得到html内容
+        String content = templateEngine.process("/mail/activation", context);
+        mailClient.sendMail(user.getEmail(), "激活邮箱", content);
+
     }
 
     @Override
@@ -281,6 +310,22 @@ public class UserServiceImpl implements UserService {
                 .andEqualTo("fromUserId", myId)
                 .andEqualTo("toUserId", visitId);
         followMapper.deleteByExample(example);
+    }
+
+    @Override
+    public Activation activation(String username, String code) {
+        Example example = new Example(User.class);
+        example.createCriteria().andEqualTo("username",username);
+        User user = userMapper.selectOneByExample(example);
+        if (user == null) return Activation.NO_USER;
+        if (user.getActivationCode() == null || user.getActivationCode().equals("-1")) {
+            return Activation.REPEAT;
+        } else if (user.getActivationCode().equals(code)) {
+            userMapper.updateActivated(username);
+            return Activation.SUCCESS;
+        } else {
+            return Activation.FAIL;
+        }
     }
 
     @Override

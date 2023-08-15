@@ -3,6 +3,7 @@ package top.ysqorz.forum.utils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Safelist;
+import org.jsoup.safety.Whitelist;
 import org.springframework.http.MediaType;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.util.HtmlUtils;
@@ -60,7 +61,8 @@ public class CommonUtils {
             }
         }
         newSbd.append(oldSbd.substring(p, oldSbd.length()));
-        return cleanXSS(newSbd.toString());
+//        return cleanXSS(newSbd.toString());
+        return newSbd.toString();
     }
 
     /**

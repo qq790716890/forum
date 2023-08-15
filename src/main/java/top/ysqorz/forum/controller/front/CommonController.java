@@ -3,10 +3,7 @@ package top.ysqorz.forum.controller.front;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.ysqorz.forum.dto.resp.UploadResult;
 import top.ysqorz.forum.service.RedisService;
@@ -31,16 +28,23 @@ public class CommonController {
     private RedisService redisService;
     // 为了方便不同组员开发，使用阿里云OSS
     @Resource
-    private UploadRepository aliyunOssRepository;
+    private UploadRepository localRepository;
 
     /**
      * 前后台公用的上传的图片的接口
      */
     @PostMapping("/upload/image")
     public UploadResult uploadImage(@NotNull MultipartFile image) throws IOException  {
-        ImageUploader imageUploader = new ImageUploader(image, aliyunOssRepository);
+        ImageUploader imageUploader = new ImageUploader(image, localRepository);
         return imageUploader.upload();
     }
+
+//    @GetMapping("/getImages/{fileName}")
+//    public void getImage(@PathVariable("fileName") String fileName, HttpServletResponse response) throws IOException {
+//        localRepository.getImage(fileName,response);
+//    }
+
+
 
     /**
      * 登录页面的验证码图片(注册页面也用这个接口)

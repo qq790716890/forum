@@ -126,5 +126,9 @@
     <update id="updateAndReduceFansCount" parameterType="Integer">
         update user set fans_count = fans_count - 1 where id = ${id};
     </update>
+
+    <update id="updateActivated">
+        update user set activation_code = "-1" where username = #{username};
+    </update>
 </mapper>
 

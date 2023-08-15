@@ -14,8 +14,13 @@ public interface AttendanceMapper extends BaseMapper<Attendance> {
     // 截至现在为止的签到日榜
     List<AttendDTO> rankList(Map<String, Object> params);
 
+    // 根据签到时间排序
+    List<AttendDTO> latestRankList(Map<String, Object> params);
+
     // 最近一次连续签到的天数 排行榜
     List<AttendDTO> consecutiveDaysRankList(Map<String, Object> params);
 
     Integer attendedCount(Map<String, Object> params);
+
+
 }

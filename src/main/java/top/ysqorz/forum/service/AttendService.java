@@ -46,4 +46,12 @@ public interface AttendService {
      * 最近一次连续签到的天数 排行榜
      */
     List<AttendDTO> consecutiveDaysRankList(Integer count);
+
+    /**
+     * 根据时间排序的签到列表
+     * @param count
+     * @return
+     */
+    List<AttendDTO> latestRank(Integer count);
+
 }

@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.ysqorz.forum.common.ResultModel;
 import top.ysqorz.forum.common.StatusCode;
+import top.ysqorz.forum.common.enumeration.Activation;
 import top.ysqorz.forum.common.exception.ParamInvalidException;
 import top.ysqorz.forum.common.exception.ServiceFailedException;
 import top.ysqorz.forum.dto.req.LoginDTO;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 通过注解实现权限控制
@@ -55,6 +57,8 @@ public class UserController {
     public ResultModel<String> index() {
         return ResultModel.success("用户信息！这个接口需要携带有效的token才能访问");
     }
+
+
 
     /**
      * 用户注册
@@ -119,6 +123,28 @@ public class UserController {
         }
     }
 
+    @RequestMapping(path = "activation/{username}/{code}", method = RequestMethod.GET)
+    public String activation(Model model, @PathVariable("username") String username, @PathVariable("code") String code){
+        Activation result = userService.activation(username, code);
+        if (result == Activation.SUCCESS){
+            model.addAttribute("msg","激活成功，您的账号已经可以正常使用了！");
+            model.addAttribute("target", "/user/login");
+        }
+        else if (result == Activation.REPEAT){
+            model.addAttribute("msg","无效操作，该账号已经激活过了！");
+            model.addAttribute("target", "/index");
+        }
+        else if (result == Activation.NO_USER){
+            model.addAttribute("msg","激活失败，不存在该用户！");
+            model.addAttribute("target", "/index");
+        }
+        else {
+            model.addAttribute("msg","激活失败，您提供的激活码不正确！");
+            model.addAttribute("target", "/index");
+        }
+        return "front/other/operation-result";
+    }
+
     /**
      * 用户登录的API
      */
@@ -137,6 +163,10 @@ public class UserController {
         User user = userService.getUserByEmail(dto.getEmail());
         if (ObjectUtils.isEmpty(user)) {
             throw new ServiceFailedException(StatusCode.EMAIL_INCORRECT);
+        }
+        if (user.getActivationCode()!=null && !user.getActivationCode().equals("-1")){
+            // 还没激活
+            throw new ServiceFailedException(StatusCode.NOT_ACTIVATED);
         }
 
         String decryptedPwd = rsaService.decryptByPrivateKey(dto.getPassword());

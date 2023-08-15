@@ -18,8 +18,8 @@ import javax.annotation.Resource;
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    @Resource
-    private ApiAccessLimitInterceptor apiAccessLimitInterceptor;
+//    @Resource
+//    private ApiAccessLimitInterceptor apiAccessLimitInterceptor;
     @Resource
     private HeaderInfoInterceptor headerInfoInterceptor;
     @Resource
@@ -29,13 +29,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(apiAccessLimitInterceptor) // 不要用new ApiAccessLimitInterceptor()
-                .addPathPatterns("/**")
-                // 注意/im/push是IM服务转发消息调用的，不是客户端调的，不能统计
-                .excludePathPatterns("/error", "/im/push", "/admin/assets/**");
+//        registry.addInterceptor(apiAccessLimitInterceptor) // 不要用new ApiAccessLimitInterceptor()
+//                .addPathPatterns("/**")
+//                // 注意/im/push是IM服务转发消息调用的，不是客户端调的，不能统计
+//                .excludePathPatterns("/error", "/im/push", "/admin/assets/**");
         registry.addInterceptor(headerInfoInterceptor)
                 .addPathPatterns("/video/*", "/post/detail/*", "/", "/index", "/post/publish",
-                        "/user/login", "/user/reg", "/user/home/*", "/user/center/set", "/user/center/home",
+                        "/user/login", "/user/reg", "/user/home/*", "/user/center/set", "/user/center/home","/user/center/index",
                         "/user/center/message", "/chat");
     }
 

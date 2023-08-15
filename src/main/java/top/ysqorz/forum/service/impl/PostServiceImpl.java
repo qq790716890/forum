@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.util.HtmlUtils;
+import tk.mybatis.mapper.entity.Example;
 import top.ysqorz.forum.common.StatusCode;
 import top.ysqorz.forum.dao.LikeMapper;
 import top.ysqorz.forum.dao.PostMapper;
@@ -299,6 +300,13 @@ public class PostServiceImpl implements PostService {
         PageHelper.startPage(page, count);
         List<PostDTO> postDTOList = postMapper.selectPostListByCreatorId(userId);
         return new PageData<>(postDTOList);
+    }
+
+    @Override
+    public int countPostListByCreatorId(Integer userId) {
+        Example example = new Example(Post.class);
+        example.createCriteria().andEqualTo("creatorId", userId);
+        return postMapper.selectCountByExample(example);
     }
 
     @Override

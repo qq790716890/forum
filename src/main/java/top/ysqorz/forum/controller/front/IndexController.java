@@ -107,6 +107,16 @@ public class IndexController {
         return attendService.consecutiveDaysRankList(count);
     }
 
+
+    /**
+     * 签到最新用户列表
+     */
+    @GetMapping("/attend/latestRank")
+    @ResponseBody
+    public List<AttendDTO> attendLatestRankRankList(@NotNull @Min(1) @Max(20) Integer count) {
+        return attendService.latestRank(count);
+    }
+
     /**
      * 随机获取指定数量个标签
      */

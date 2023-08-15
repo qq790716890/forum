@@ -1,10 +1,13 @@
 package top.ysqorz.forum.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import top.ysqorz.forum.dao.CollectMapper;
 import top.ysqorz.forum.dao.PostMapper;
+import top.ysqorz.forum.dto.PageData;
+import top.ysqorz.forum.dto.resp.PostDTO;
 import top.ysqorz.forum.po.Collect;
 import top.ysqorz.forum.service.CollectService;
 import top.ysqorz.forum.shiro.ShiroUtils;
@@ -12,6 +15,7 @@ import top.ysqorz.forum.shiro.ShiroUtils;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,5 +71,29 @@ public class CollectServiceImpl implements CollectService {
         postMapper.addCollectCount(params);
 
         return collectMapper.deleteByPrimaryKey(collectId);
+    }
+
+    /**
+     * 根据用户id，查询他有多少帖子
+     * @param userId
+     * @return
+     */
+    @Override
+    public int countCollectByUserId(Integer userId) {
+        Example example = new Example(Collect.class);
+        example.createCriteria()
+                .andEqualTo("userId", userId);
+        return collectMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public PageData<PostDTO> getCollectPostListByUserId(Integer userId, Integer page, Integer count) {
+        Example example = new Example(Collect.class);
+        example.createCriteria()
+                .andEqualTo("userId", userId);
+
+        PageHelper.startPage(page, count);
+        List<PostDTO> postDTOList = collectMapper.selectCollectPostListByUserId(userId);
+        return new PageData<>(postDTOList);
     }
 }

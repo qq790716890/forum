@@ -114,7 +114,7 @@ public class ShiroConfig {
         chain.addPathDefinition("/user/oauth/**/callback", "jwtAuth[permissive]");
         chain.addPathDefinition("/user/home/**", "jwtAuth[permissive]");
         chain.addPathDefinition("/user/**", "anon");
-        chain.addPathDefinition("/upload/**", "jwtAuth");
+        chain.addPathDefinition("/upload/image", "jwtAuth");
         chain.addPathDefinition("/meg/**", "jwtAuth");
         chain.addPathDefinition("/comment/**/publish", "jwtAuth");
         chain.addPathDefinition("/comment/delete", "jwtAuth");

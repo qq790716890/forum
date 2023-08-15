@@ -102,6 +102,14 @@
             <artifactId>mapper-spring-boot-starter</artifactId>
             <version>${tk-mapper.version}</version>
         </dependency>
+
+        <!-- 邮件服务 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+
         <!-- druid的官方整合包 -->
         <dependency>
             <groupId>com.alibaba</groupId>

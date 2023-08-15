@@ -46,6 +46,8 @@ public class User {
      */
     private String password;
 
+    private String activationCode;
+
     /**
      * 登录密码的随机盐
      */

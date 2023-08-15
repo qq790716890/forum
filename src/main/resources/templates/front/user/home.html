@@ -74,7 +74,7 @@
         <a href="javascript:;" class="layui-btn layui-btn-primary fly-imActive alreadyFocus" name="isFollow"
            data-type="follow" th:if="${isFocusOn && isLogin}">已关注</a>
         <a href="javascript:;" class="layui-btn layui-btn-normal fly-imActive"
-           data-type="chat" th:href="@{/user/login}">发起会话</a>
+           data-type="chat"  th:href="@{/chat}">发起会话</a>
     </div>
     <!--已登录身份为本人-->
     <div class="fly-sns" data-user="" th:if="${isMyself}"></div>
@@ -122,7 +122,7 @@
     <li>
         <p>
             <span>{{d.createTime}}</span>
-            在<a href="/post/detail/{{d.id}}" target="_blank">{{d.postTitle}}</a>中评论：
+            在<a href="/post/detail/{{d.postId}}" target="_blank">{{d.postTitle}}</a>中评论：
         </p>
         <div class="home-dacontent ellipsis">
             {{d.content}}

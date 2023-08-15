@@ -11,9 +11,12 @@ import top.ysqorz.forum.dto.PageData;
 import top.ysqorz.forum.dto.req.CheckUserDTO;
 import top.ysqorz.forum.dto.req.RegisterDTO;
 import top.ysqorz.forum.dto.resp.MessageListDTO;
+import top.ysqorz.forum.dto.resp.SimpleUserDTO;
 import top.ysqorz.forum.dto.resp.UploadResult;
 import top.ysqorz.forum.po.User;
+import top.ysqorz.forum.service.CollectService;
 import top.ysqorz.forum.service.MessageService;
+import top.ysqorz.forum.service.PostService;
 import top.ysqorz.forum.service.UserService;
 import top.ysqorz.forum.shiro.ShiroUtils;
 import top.ysqorz.forum.upload.UploadRepository;
@@ -44,6 +47,11 @@ public class UserCenterController {
     private UploadRepository localRepository;
     @Resource
     private MessageService messageService;
+    @Resource
+    private CollectService collectService;
+
+    @Resource
+    private PostService postService;
 
     /**
      * 跳转到我的主页
@@ -57,7 +65,13 @@ public class UserCenterController {
      * 跳转到用户中心
      */
     @GetMapping("/index")
-    public String indexPage() {
+    public String indexPage(Model model) {
+        SimpleUserDTO information = userService.getHomeInformationById(ShiroUtils.getUserId());
+        model.addAttribute("information", information);
+        int myPostCnt = postService.countPostListByCreatorId(ShiroUtils.getUserId());
+        int myCollectCnt = collectService.countCollectByUserId(ShiroUtils.getUserId());
+        model.addAttribute("myPostCnt",myPostCnt);
+        model.addAttribute("myCollectCnt",myCollectCnt);
         return "front/user/index";
     }
 

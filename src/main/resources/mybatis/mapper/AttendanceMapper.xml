@@ -94,4 +94,19 @@
       limit ${count}
   </select>
 
+    <select id="latestRankList" resultType="top.ysqorz.forum.dto.resp.AttendDTO">
+        select user_id, username, photo, attend_time,
+               (select count(*) + 1
+                from attendance a2
+                where attend_date = #{today} and
+                    a2.user_id != a1.user_id and
+                a2.attend_time > a1.attend_time) as `rank`
+        from attendance a1
+            left join user u on a1.user_id = u.id
+        where attend_date = #{today}
+        order by attend_time desc
+        limit ${count}
+
+    </select>
+
 </mapper>

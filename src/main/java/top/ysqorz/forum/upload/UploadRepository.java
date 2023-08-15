@@ -1,5 +1,7 @@
 package top.ysqorz.forum.upload;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -14,6 +16,10 @@ public interface UploadRepository {
      * @return
      */
     String[] uploadImage(InputStream inputStream, String filename);
+
+    default void getImage(String fileName, HttpServletResponse response) throws IOException {
+
+    }
 
     /**
      * @param inputStream

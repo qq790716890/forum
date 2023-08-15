@@ -156,5 +156,14 @@ public class AttendServiceImpl implements AttendService {
         return attendanceMapper.consecutiveDaysRankList(params);
     }
 
+    @Override
+    public List<AttendDTO> latestRank(Integer count) {
+        Map<String, Object> params = new HashMap<>();
+        final LocalDate toady = LocalDate.now();
+        params.put("today", toady);
+        params.put("count", count);
+        return attendanceMapper.latestRankList(params);
+    }
+
 
 }

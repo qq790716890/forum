@@ -1,6 +1,7 @@
 package top.ysqorz.forum.service;
 
 import top.ysqorz.forum.common.StatusCode;
+import top.ysqorz.forum.common.enumeration.Activation;
 import top.ysqorz.forum.dto.req.CheckUserDTO;
 import top.ysqorz.forum.dto.req.QueryUserCondition;
 import top.ysqorz.forum.dto.req.RegisterDTO;
@@ -167,4 +168,6 @@ public interface UserService {
      * 删除关注
      */
     void deleteFollow(Integer visitId);
+
+    Activation activation(String username, String code);
 }

@@ -127,7 +127,7 @@ public class PostController {
     /**
      * 发帖
      */
-    @ApiAccessLimit(unit = ChronoUnit.MINUTES, maxCount = 10) // 1小时发帖超过10篇，认为接口被恶意调用，禁用IP
+//    @ApiAccessLimit(unit = ChronoUnit.MINUTES, maxCount = 20) // 1小时发帖超过10篇，认为接口被恶意调用，禁用IP
     @ResponseBody
     @PostMapping("/publish")
     public Post publish(@Validated(PublishPostDTO.Add.class) PublishPostDTO dto) {
@@ -217,6 +217,14 @@ public class PostController {
             collectService.cancelCollect(collect.getId(), postId); // collectId是可靠的
         }
         return StatusCode.SUCCESS;
+    }
+
+    @GetMapping("/collect/list/{userId}")
+    @ResponseBody
+    public PageData<PostDTO> getCollectPostList(@RequestParam(defaultValue = "10") Integer limit,
+                                         @RequestParam(defaultValue = "1") Integer page,
+                                         @PathVariable Integer userId) {
+        return collectService.getCollectPostListByUserId(userId,page,Math.max(1,limit));
     }
 
     /**

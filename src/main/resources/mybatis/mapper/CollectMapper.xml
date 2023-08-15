@@ -10,4 +10,11 @@
     <result column="post_id" jdbcType="INTEGER" property="postId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
+
+  <select id="selectCollectPostListByUserId" resultType="top.ysqorz.forum.dto.resp.PostDTO">
+    select c.post_id as id, p.title, c.create_time
+    from collect c left join post p  ON p.id = c.post_id
+    where c.user_id = #{userId}
+
+  </select>
 </mapper>
