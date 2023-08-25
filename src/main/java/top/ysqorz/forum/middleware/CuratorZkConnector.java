@@ -186,6 +186,7 @@ public class CuratorZkConnector implements ZkConnector<ChildData, CuratorZkConne
                     // 将当前服务器注册到zookeeper中，作为临时节点
                     String path = ZkConnector.PATH + "/" + IMUtils.getWebServer();
                     this.create(path, IMUtils.getWsServer(), CreateMode.EPHEMERAL);
+                    log.warn("该ws服务器地址为： " + IMUtils.getWsServer());
                     log.warn("往Zookeeper注册当前服务成功");
                     failed = false;
                 } catch (Exception ignored) {

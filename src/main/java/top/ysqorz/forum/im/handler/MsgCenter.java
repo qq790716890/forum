@@ -150,7 +150,7 @@ public class MsgCenter {
         addedMsgTypes.add(pingPongHandler.getMsgType().name());
 
         bindHandler.addBehind(pingPongHandler);
-        pingPongHandler.addBehind(tailHandler);
+        pingPongHandler.addBehind(tailHandler); // pingPongHandler 后面是 tailHandler
 
         first = bindHandler;
         tail = pingPongHandler; // 不包括tailHandler

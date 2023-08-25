@@ -39,10 +39,10 @@ public class CommonController {
         return imageUploader.upload();
     }
 
-//    @GetMapping("/getImages/{fileName}")
-//    public void getImage(@PathVariable("fileName") String fileName, HttpServletResponse response) throws IOException {
-//        localRepository.getImage(fileName,response);
-//    }
+    @GetMapping("/upload/images/{fileName}")
+    public void getImage(@PathVariable("fileName") String fileName, HttpServletResponse response) throws IOException {
+        localRepository.getImage(fileName,response);
+    }
 
 
 

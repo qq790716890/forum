@@ -97,6 +97,8 @@ pagehelper:
   support-methods-arguments: true
 
 server:
+  tomcat:
+    uri-encoding: UTF-8
   # 报错信息
   error:
     include-exception: true

@@ -29,6 +29,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
+import java.net.URLDecoder;
 import java.util.Map;
 import java.util.Optional;
 
@@ -77,7 +78,7 @@ public class UserController {
             return StatusCode.CAPTCHA_INVALID; // 验证码错误
         }
         User user = userService.getUserByEmail(dto.getEmail());
-        if (!ObjectUtils.isEmpty(user)) {
+        if (!ObjectUtils.isEmpty(user) && user.getActivationCode().equals("-1")) {
             return StatusCode.EMAIL_IS_EXIST; // 该邮箱已注册
         }
         String decryptedPwd = rsaService.decryptByPrivateKey(dto.getPassword());
@@ -123,8 +124,8 @@ public class UserController {
         }
     }
 
-    @RequestMapping(path = "activation/{username}/{code}", method = RequestMethod.GET)
-    public String activation(Model model, @PathVariable("username") String username, @PathVariable("code") String code){
+    @RequestMapping(path = "/activation", method = RequestMethod.GET)
+    public String activation(Model model, @RequestParam String username, @RequestParam String code){
         Activation result = userService.activation(username, code);
         if (result == Activation.SUCCESS){
             model.addAttribute("msg","激活成功，您的账号已经可以正常使用了！");
@@ -134,8 +135,8 @@ public class UserController {
             model.addAttribute("msg","无效操作，该账号已经激活过了！");
             model.addAttribute("target", "/index");
         }
-        else if (result == Activation.NO_USER){
-            model.addAttribute("msg","激活失败，不存在该用户！");
+        else if (result == Activation.NOT_PAIR){
+            model.addAttribute("msg","激活失败，用户和激活码不匹配！");
             model.addAttribute("target", "/index");
         }
         else {

@@ -7,6 +7,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import top.ysqorz.forum.common.Constant;
 import top.ysqorz.forum.im.handler.ChatFriendMsgHandler;
 import top.ysqorz.forum.im.handler.ChatNotificationHandler;

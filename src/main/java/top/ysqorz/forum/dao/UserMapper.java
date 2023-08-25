@@ -16,7 +16,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     int updateRewardPoints(Map<String, Object> param);
 
-    int updateActivated(String username);
+    int updateActivated(Integer userId);
 
     SimpleUserDTO selectSimpleUserById(Integer userId);
 

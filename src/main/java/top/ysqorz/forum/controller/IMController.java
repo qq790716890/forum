@@ -31,6 +31,7 @@ public class IMController {
 
     /**
      * 1. IM服务之间转发业务类型的消息需要调用此接口
+     *      --》 从 IMServer列表中找到 与当前消息类型相关的 channel 和 服务器，然后 调用 该服务器的 push，推送至该服务器的 channelId 的 channel
      * 2. 客户端使用API发送业务类型的消息，而不是使用WebSocket
      *
      * @deprecated 弃用，每种业务消息都应该使用不同的接口
@@ -49,7 +50,8 @@ public class IMController {
     }
 
     /**
-     * 转交给 MsgCenter push
+     * 在 当前 服务器的 handler 链 中传递到对应的 handler中处理，
+     * 根据 msg 中 groupId(receiverId or videoId) 找到 channels，然后不能与 channelId一样
      */
     @PostMapping("/push")
     public StatusCode pushMsg(@RequestBody MsgModel msg, String channelId) { // source channel
@@ -57,6 +59,7 @@ public class IMController {
         return StatusCode.SUCCESS;
     }
 
+    // 从 zookeeper 中  server list 随机返回一个
     @GetMapping("/server")
     public ResultModel<String> wsServers() {
         return ResultModel.success(imService.getRandWsServerUrl());

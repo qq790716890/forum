@@ -41,10 +41,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author 阿灿
@@ -91,7 +88,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) {
         Example example = new Example(User.class);
-        example.createCriteria().andEqualTo("email", email);
+        example.createCriteria().andEqualTo("email", email).andEqualTo("activationCode", "-1");
         return userMapper.selectOneByExample(example);
     }
 
@@ -221,7 +218,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setEmail(dto.getEmail());
         user.setUsername(dto.getUsername().trim());
-        user.setActivationCode(UUID.randomUUID().toString().substring(0,12).replace("-",""));
+        user.setActivationCode(UUID.randomUUID().toString().substring(0, 12).replace("-", ""));
 
         // 8个字符的随机字符串，作为加密登录的随机盐。
         String loginSalt = RandomUtils.generateStr(8);
@@ -248,11 +245,14 @@ public class UserServiceImpl implements UserService {
         Context context = new Context();
         context.setVariable("email", user.getEmail());
         // http://localhost:8080/activation/101/code
-        String url = domain +  "/user/activation/" + user.getUsername() + "/" + user.getActivationCode(); //userId 会在添加入数据库后自动回写
+
+        String encodedName = user.getUsername();
+        String url = domain + "/user/activation?username=" + encodedName + "&code=" + user.getActivationCode(); //userId 会在添加入数据库后自动回写
         context.setVariable("url", url);
         // 将数据写入激活模板html，得到html内容
-        String content = templateEngine.process("/mail/activation", context);
+        String content = templateEngine.process("mail/activation", context);
         mailClient.sendMail(user.getEmail(), "激活邮箱", content);
+
 
     }
 
@@ -276,6 +276,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean isFocusOn(Integer visitId) {
+        // 如果未登录，直接返回false
+        if (ObjectUtils.isEmpty(ShiroUtils.getUserId())) {
+            return false;
+        }
         Example example = new Example(Follow.class);
         example.createCriteria()
                 .andEqualTo("fromUserId", ShiroUtils.getUserId())
@@ -315,13 +319,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Activation activation(String username, String code) {
         Example example = new Example(User.class);
-        example.createCriteria().andEqualTo("username",username);
+        example.createCriteria().andEqualTo("username", username).andEqualTo("activationCode", code);
         User user = userMapper.selectOneByExample(example);
-        if (user == null) return Activation.NO_USER;
+        if (user == null) return Activation.NOT_PAIR;
         if (user.getActivationCode() == null || user.getActivationCode().equals("-1")) {
             return Activation.REPEAT;
         } else if (user.getActivationCode().equals(code)) {
-            userMapper.updateActivated(username);
+            userMapper.updateActivated(user.getId());
             return Activation.SUCCESS;
         } else {
             return Activation.FAIL;

@@ -7,5 +7,5 @@ package top.ysqorz.forum.common.enumeration;
  * @Date 2023/8/3 15:28
  */
 public enum Activation {
-    SUCCESS, REPEAT, NO_USER, FAIL
+    SUCCESS, REPEAT, NOT_PAIR,NO_USER, FAIL
 }

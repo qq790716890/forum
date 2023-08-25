@@ -128,7 +128,7 @@
     </update>
 
     <update id="updateActivated">
-        update user set activation_code = "-1" where username = #{username};
+        update user set activation_code = "-1" where id = #{userId};
     </update>
 </mapper>
 

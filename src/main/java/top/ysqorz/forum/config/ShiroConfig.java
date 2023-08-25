@@ -106,6 +106,7 @@ public class ShiroConfig {
         // 除了浏览帖子特殊（不登录也行，只是数据不一样），发帖、修改、删除帖子等其他操作都需要登录
         chain.addPathDefinition("/video/**", "jwtAuth[permissive]");
         chain.addPathDefinition("/post/detail/**", "jwtAuth[permissive]");
+        chain.addPathDefinition("/post/list/**", "jwtAuth[permissive]");
         chain.addPathDefinition("/post/**", "jwtAuth");
         chain.addPathDefinition("/attend", "jwtAuth");
         chain.addPathDefinition("/chat/**", "jwtAuth");

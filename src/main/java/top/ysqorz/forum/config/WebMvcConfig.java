@@ -39,7 +39,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/user/center/message", "/chat");
     }
 
-    /**
+    /**a
      * 跨域配置
      */
     @Override
