@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -15,7 +16,9 @@ import top.ysqorz.forum.common.Constant;
 import top.ysqorz.forum.common.StatusCode;
 import top.ysqorz.forum.common.enumeration.Activation;
 import top.ysqorz.forum.common.enumeration.Gender;
+import top.ysqorz.forum.common.enumeration.SysUser;
 import top.ysqorz.forum.common.exception.ParamInvalidException;
+import top.ysqorz.forum.common.exception.ServiceFailedException;
 import top.ysqorz.forum.dao.*;
 import top.ysqorz.forum.dto.req.CheckUserDTO;
 import top.ysqorz.forum.dto.req.QueryUserCondition;
@@ -24,6 +27,8 @@ import top.ysqorz.forum.dto.resp.BlackInfoDTO;
 import top.ysqorz.forum.dto.resp.SimpleUserDTO;
 import top.ysqorz.forum.dto.resp.UserDTO;
 import top.ysqorz.forum.dto.resp.chat.ChatUserCardDTO;
+import top.ysqorz.forum.middleware.redis.RedisUtils;
+import top.ysqorz.forum.middleware.redis.SystemUserCache;
 import top.ysqorz.forum.oauth.provider.BaiduProvider;
 import top.ysqorz.forum.oauth.provider.GiteeProvider;
 import top.ysqorz.forum.oauth.provider.QQProvider;
@@ -42,6 +47,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+
 
 /**
  * @author 阿灿
@@ -73,6 +80,15 @@ public class UserServiceImpl implements UserService {
     private FirstCommentMapper firstCommentMapper;
     @Resource
     private CommentNotificationMapper commentNotificationMapper;
+
+    @Resource
+    private ChatFriendMapper chatFriendMapper;
+
+    @Resource
+    private SystemUserCache systemUserCache;
+
+    @Resource
+    private ChatgptServiceImpl chatgptService;
 
     // 发邮件所需 的 两件套
     @Autowired
@@ -214,6 +230,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void register(RegisterDTO dto) {
         User user = new User();
         user.setEmail(dto.getEmail());
@@ -240,7 +257,7 @@ public class UserServiceImpl implements UserService {
                 .setPhoto("/admin/assets/images/defaultUserPhoto.jpg");
 
         userMapper.insertSelective(user);
-
+        this.addInitSystemFriend(user.getId());
         // 激活邮件
         Context context = new Context();
         context.setVariable("email", user.getEmail());
@@ -259,6 +276,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public SimpleUserDTO getSimpleUser(Integer userId) {
         SimpleUserDTO simpleUserDTO = userMapper.selectSimpleUserById(userId);
+        if (simpleUserDTO == null) return null;
         simpleUserDTO.setLevel(6); // TODO 根据积分计算level
         Example example = new Example(CommentNotification.class);
         example.createCriteria().andEqualTo("receiverId", userId).andEqualTo("isRead", 0);
@@ -330,6 +348,35 @@ public class UserServiceImpl implements UserService {
         } else {
             return Activation.FAIL;
         }
+    }
+
+    @Override
+    public void addInitSystemFriend(Integer userId) {
+        Example example = new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn("email", SysUser.SYS_EMAIL_SET);
+        List<User> sysFriends = userMapper.selectByExample(example);
+
+        // TODO: 筛选出 没有的系统账号，添加初始好友
+//        Example sysFriendExample = new Example(ChatFriend.class);
+//        Example.Criteria sysFriendCriteria = example.createCriteria();
+//        sysFriendCriteria.andEqualTo("myId",userId);
+//        sysFriendCriteria.andIn("friendId", sysFriend.stream().map(User::getId).collect(Collectors.toList()));
+//        List<ChatFriend> chatFriends = chatFriendMapper.selectByExample(sysFriendExample);
+
+        List<ChatFriend> collect = sysFriends.stream().map(sysFriend -> {
+            ChatFriend chatFriend = new ChatFriend();
+            chatFriend.setMyId(userId).setFriendId(sysFriend.getId());
+            chatFriend.setCreateTime(LocalDateTime.now());
+            return chatFriend;
+        }).collect(Collectors.toList());
+        chatFriendMapper.insertList(collect);
+    }
+
+    @Override
+    public Set<Integer> getAllSystemUserId() {
+        return systemUserCache.getSysUserIds();
+
     }
 
     @Override

@@ -107,8 +107,14 @@ public enum StatusCode {
 
     // 文件相关
     VIDEO_NOT_EXIST(6900, "视频不存在"),
-    FILE_NOT_EXIST(6901, "文件不存在");
+    FILE_NOT_EXIST(6901, "文件不存在"),
 
+    // gpt相关
+    NO_Token_Count(7000, "用户余额不足"),
+    GPT_FRIEND_ALREADY_EXIST(7001, "已经有GPT好友了"),
+
+
+    ;
     // 状态码数值
     private Integer code;
     // 状态码描述信息

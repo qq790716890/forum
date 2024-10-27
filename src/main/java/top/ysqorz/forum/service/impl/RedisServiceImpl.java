@@ -181,6 +181,12 @@ public class RedisServiceImpl implements RedisService {
         }
     }
 
+    /**
+     *
+     * @param channelType channel type
+     * @param groupId : receiver
+     * @return
+     */
     @Override
     public Set<String> getWsServers(ChannelType channelType, String groupId) {
         String key = String.format(Constant.REDIS_KEY_IM_WS, channelType.name(), groupId);

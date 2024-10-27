@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 
 /**
  * @author passerbyYSQ
@@ -54,6 +55,9 @@ public class JwtAuthenticatingFilter extends BasicHttpAuthenticationFilter {
             log.error("Not found any token", e);
         } catch (Exception e) {
             log.error("Error occurs when login", e);
+        } catch (Throwable e){
+            log.error("Error occurs when login", e);
+            log.error(e.getMessage());
         }
         //return allowed;
         return allowed || super.isPermissive(mappedValue);
@@ -91,10 +95,12 @@ public class JwtAuthenticatingFilter extends BasicHttpAuthenticationFilter {
         // 从cookie中尝试获取token
         if (StringUtils.isEmpty(token)) {
             Cookie[] cookies = httpRequest.getCookies();
-            for (Cookie cookie : cookies) {
-                if ("token".equalsIgnoreCase(cookie.getName())) {
-                    token = cookie.getValue();
-                    break;
+            if (cookies!=null && cookies.length > 0) {
+                for (Cookie cookie : cookies) {
+                    if ("token".equalsIgnoreCase(cookie.getName())) {
+                        token = cookie.getValue();
+                        break;
+                    }
                 }
             }
         }

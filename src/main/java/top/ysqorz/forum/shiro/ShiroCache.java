@@ -30,7 +30,12 @@ public class ShiroCache<K, V> implements Cache<K, V> {
 
     @Override
     public V get(K key) throws CacheException {
-        org.springframework.cache.Cache.ValueWrapper valueWrapper = springCache.get(key);
+        org.springframework.cache.Cache.ValueWrapper valueWrapper = null;
+        try {
+            valueWrapper = springCache.get(key);
+        }catch (Throwable e){
+
+        }
         if (valueWrapper == null) {
             return null;
         }

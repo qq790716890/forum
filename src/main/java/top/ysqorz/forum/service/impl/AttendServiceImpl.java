@@ -42,22 +42,24 @@ public class AttendServiceImpl implements AttendService {
             attendCard.setUserId(myId);
 
             User self = userService.getUserById(myId);
-            LocalDateTime lastAttendTime = self.getLastAttendTime();
-            boolean isAttendToday = !ObjectUtils.isEmpty(lastAttendTime) &&
-                    LocalDate.now().equals(lastAttendTime.toLocalDate());
-            attendCard.setIsAttendToady(isAttendToday);
+            if (self != null) {
+                LocalDateTime lastAttendTime = self.getLastAttendTime();
+                boolean isAttendToday = !ObjectUtils.isEmpty(lastAttendTime) &&
+                        LocalDate.now().equals(lastAttendTime.toLocalDate());
+                attendCard.setIsAttendToady(isAttendToday);
 
-            if (isAttendToday) { // 今天已签到
-                Integer rank = this.attendRankNum(myId, lastAttendTime);
-                attendCard.setAttendRank(rank); // 今天的签到排名
-            }
+                if (isAttendToday) { // 今天已签到
+                    Integer rank = this.attendRankNum(myId, lastAttendTime);
+                    attendCard.setAttendRank(rank); // 今天的签到排名
+                }
 
-            // 由于连续签到的天数在用户下一次签到时才会重置，此处需要做纠正
-            // 上一次签到时间是昨天之前，则连续签到的天数为0
-            boolean isAttendYesterday = !ObjectUtils.isEmpty(lastAttendTime) &&
-                    LocalDate.now().equals(lastAttendTime.toLocalDate());
-            if (isAttendYesterday || isAttendToday) {
-                attendCard.setConsecutiveAttendDays(self.getConsecutiveAttendDays());
+                // 由于连续签到的天数在用户下一次签到时才会重置，此处需要做纠正
+                // 上一次签到时间是昨天之前，则连续签到的天数为0
+                boolean isAttendYesterday = !ObjectUtils.isEmpty(lastAttendTime) &&
+                        LocalDate.now().equals(lastAttendTime.toLocalDate());
+                if (isAttendYesterday || isAttendToday) {
+                    attendCard.setConsecutiveAttendDays(self.getConsecutiveAttendDays());
+                }
             }
         }
         // 已签到的人数

@@ -24,6 +24,8 @@ public class LoginUser implements Serializable {
     private Gender gender;
     private String photo;
     private String token;
+    private Long gptTokenCount;
+    private String userApiKey;
 
     public LoginUser(User user, String token) {
         BeanUtils.copyProperties(user, this);

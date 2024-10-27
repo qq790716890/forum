@@ -16,6 +16,7 @@ import top.ysqorz.forum.shiro.JwtToken;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 阿灿
@@ -170,4 +171,15 @@ public interface UserService {
     void deleteFollow(Integer visitId);
 
     Activation activation(String username, String code);
+
+    /**
+     * 添加初始系统好友
+     * @param userId
+     */
+    void addInitSystemFriend(Integer userId);
+
+    /**
+     * 获取所有系统账号的id
+     */
+    Set<Integer> getAllSystemUserId();
 }

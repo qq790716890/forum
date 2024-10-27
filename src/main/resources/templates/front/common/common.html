@@ -50,6 +50,10 @@
             th:href="@{/user/center/index}">我发表的贴</a></li>
     <li th:if="${loginInfo !=null}" class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a
             th:href="@{/user/center/index}">我收藏的贴</a></li>
+    <li class="layui-nav-item" th:class="'layui-nav-item' + ${page == 'chat' ? ' layui-this' : ''}">
+        <a th:href="@{/chat}"><i class="layui-icon">&#xe611;</i>在线聊天</a>
+    </li>
+
 </ul>
 
 <!-- user center sidebar end -->

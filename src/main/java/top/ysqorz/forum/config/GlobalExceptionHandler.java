@@ -110,6 +110,13 @@ public class GlobalExceptionHandler {
         return wrapModelAndView(StatusCode.SERVER_ERROR, ExceptionUtil.stacktraceToString(e), request);
     }
 
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 非业务层面的异常，表示出现了服务端错误。
+//    @ExceptionHandler(NullPointerException.class)
+//    public ModelAndView handleNullPointerException(Exception e, HttpServletRequest request) {
+//        e.printStackTrace();
+//        return new ModelAndView("front/index");
+//    }
+
     private ModelAndView wrapModelAndView(StatusCode code, String errorMsg, HttpServletRequest request) {
         ResultModel<Object> res = ObjectUtils.isEmpty(errorMsg) ?
                 ResultModel.failed(code) :

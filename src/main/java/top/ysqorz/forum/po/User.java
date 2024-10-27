@@ -10,6 +10,7 @@ import top.ysqorz.forum.common.enumeration.Gender;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @EqualsAndHashCode
 @Table(name = "user")
-public class User {
+public class User implements Serializable {
 
     /**
      * 用户id
@@ -128,6 +129,18 @@ public class User {
      */
     @Column(name = "fans_count")
     private Integer fansCount;
+
+    /**
+     * gpt token数
+     */
+    @Column(name = "gpt_token_count")
+    private Long gptTokenCount;
+
+    /**
+     * 用户的apiKey
+     */
+    @Column(name = "user_api_key")
+    private String userApiKey;
 
     /**
      * giteeid

@@ -3,7 +3,9 @@ package top.ysqorz.forum.config.interceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import top.ysqorz.forum.dto.resp.SimpleUserDTO;
 import top.ysqorz.forum.service.UserService;
+import top.ysqorz.forum.shiro.ShiroUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

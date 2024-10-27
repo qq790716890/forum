@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import tk.mybatis.mapper.entity.Example;
 import top.ysqorz.forum.common.Constant;
@@ -255,6 +256,11 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public List<ChatgptMessage> getChatHistoryWithGPT(Integer page, Integer count) {
+        return null;
+    }
+
+    @Override
     public boolean isInvalidFriendGroup(Integer friendGroupId) {
         if (ObjectUtils.isEmpty(friendGroupId)) {
             return false; // null表示未分组，不是非法
@@ -389,12 +395,17 @@ public class ChatServiceImpl implements ChatService {
         // 好友列表
         List<ChatListDTO.ChatFriendGroupDTO> friendGroupList = chatFriendGroupMapper.selectFriendGroupList(myId);
         friendGroupList.add(this.getChatFriendsWithoutGroup()); // 未分组
+        Set<Integer> allSystemUserId = userService.getAllSystemUserId();
         for (ChatListDTO.ChatFriendGroupDTO friendGroup : friendGroupList) {
-            for (ChatListDTO.ChatFriendDTO friend : friendGroup.getList()) {
-                boolean isOnline = redisService.isUserOnline(friend.getId());
-                friend.setStatus(isOnline ? "online" : "offline");
+            if (!CollectionUtils.isEmpty(friendGroup.getList())) {
+                for (ChatListDTO.ChatFriendDTO friend : friendGroup.getList()) {
+                    if (friend == null) continue;
+                    boolean isOnline = allSystemUserId.contains(friend.getId()) || redisService.isUserOnline(friend.getId());
+                    friend.setStatus(isOnline ? "online" : "offline");
+                }
             }
         }
+
         chatListDTO.setFriend(friendGroupList);
         // TODO 群聊列表
         chatListDTO.setGroup(new ArrayList<>());

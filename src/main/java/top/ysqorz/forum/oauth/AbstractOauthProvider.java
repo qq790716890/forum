@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import tk.mybatis.mapper.entity.Example;
 import top.ysqorz.forum.common.StatusCode;
@@ -67,6 +68,7 @@ public abstract class AbstractOauthProvider<T> implements OauthProvider<T> {
     }
 
     @Override
+    @Transactional
     public String oauthCallback(String state, String code, HttpServletResponse resp) {
         String referer = this.checkState(state);
         String accessToken = this.getAccessToken(code);
@@ -102,6 +104,8 @@ public abstract class AbstractOauthProvider<T> implements OauthProvider<T> {
                 this.updateUniqueId(dbUser, uniqueId);
                 this.completeDbUser(oauthUser, dbUser);
                 userMapper.insertUseGeneratedKeys(dbUser);
+                userService.addInitSystemFriend(dbUser.getId());
+
             }
         }
         if (!ShiroUtils.isAuthenticated()) {

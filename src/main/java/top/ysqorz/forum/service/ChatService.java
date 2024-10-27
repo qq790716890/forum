@@ -7,10 +7,7 @@ import top.ysqorz.forum.dto.resp.chat.ChatFriendApplyDTO;
 import top.ysqorz.forum.dto.resp.chat.ChatListDTO;
 import top.ysqorz.forum.dto.resp.chat.ChatUserCardDTO;
 import top.ysqorz.forum.dto.resp.chat.NotSignedChatFriendMsg;
-import top.ysqorz.forum.po.ChatFriend;
-import top.ysqorz.forum.po.ChatFriendApply;
-import top.ysqorz.forum.po.ChatFriendGroup;
-import top.ysqorz.forum.po.ChatFriendMsg;
+import top.ysqorz.forum.po.*;
 
 import java.util.List;
 import java.util.Set;
@@ -163,4 +160,7 @@ public interface ChatService {
      * 获取跟某个好友的聊天历史记录
      */
     PageData<ChatFriendMsg> getChatHistoryWithFriend(Integer friendId, Integer page, Integer count);
+
+    List<ChatgptMessage> getChatHistoryWithGPT(Integer page, Integer count);
+
 }
