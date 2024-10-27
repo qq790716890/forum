@@ -102,6 +102,7 @@ public abstract class MsgHandler<DataType> {
                 if (sourceChannelId != null) {
                     restRequest.addParam("channelId", sourceChannelId);
                 }
+                log.error(JsonUtils.objToJson(msg));
                 JSONObject res = restRequest.post(JSONObject.class);
                 log.info(JsonUtils.objToJson(res));
             }

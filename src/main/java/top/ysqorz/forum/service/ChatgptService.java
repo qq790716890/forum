@@ -30,6 +30,6 @@ public interface ChatgptService {
      */
     SseEmitter sendMsgSse(Boolean useToken, Long conversationId, String prompt);
 
-    String sendMsgString(Boolean useToken, Long conversationId, String prompt);
+    String sendMsgString(Boolean useToken, String prompt);
 
 }

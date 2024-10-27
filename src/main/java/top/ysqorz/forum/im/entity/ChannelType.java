@@ -6,5 +6,6 @@ package top.ysqorz.forum.im.entity;
  */
 public enum ChannelType {
     DANMU,
-    CHAT
+    CHAT,
+    GPT
 }

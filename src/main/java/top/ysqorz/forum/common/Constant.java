@@ -31,7 +31,7 @@ public interface Constant {
     String REDIS_KEY_KEY_PAIR = "keypair:%s";
 
     // SYSUser:%s
-    String REDIS_KEY_SYS_USER = "sysuser:";
+    String REDIS_KEY_SYS_USER = "sysuser:%s";
 
 
     // redis captcha 有效期：5分钟
@@ -44,7 +44,7 @@ public interface Constant {
     Duration DURATION_KEY_PAIR = Duration.ofDays(7);
 
     // GPT系统用户缓存时间SYSUser:%s
-    Duration DURATION_KEY_SYS_USER = Duration.ofDays(7);
+    Duration DURATION_KEY_SYS_USER = Duration.ofDays(300);
 
 
     // 每一页的记录数，默认值

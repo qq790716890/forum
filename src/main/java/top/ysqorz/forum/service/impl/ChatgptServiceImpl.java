@@ -126,20 +126,21 @@ public class ChatgptServiceImpl implements ChatgptService {
 
         // 1、设置api key
         String key;
-        if (useToken) {
-            // 如果选择了token支付方式，检查token数
-            if (user.getGptTokenCount() > 0 ) {
-                key = apiKey;
-            }
-            else {
-                throw new ServiceFailedException(NO_Token_Count);
-            }
-        }
-        else {
-            // 使用用户账户设置的API Key
-            key = user.getUserApiKey();
-        }
-
+//        if (useToken) {
+//            // 如果选择了token支付方式，检查token数
+//            if (user.getGptTokenCount() > 0 ) {
+//                key = apiKey;
+//            }
+//            else {
+//                throw new ServiceFailedException(NO_Token_Count);
+//            }
+//        }
+//        else {
+//            // 使用用户账户设置的API Key
+//            key = user.getUserApiKey();
+//        }
+        key = apiKey;
+        log.error(apiKey);
         // 2、设置代理
         Proxy proxy = Proxys.http("127.0.0.1", 7890);
 
@@ -187,7 +188,7 @@ public class ChatgptServiceImpl implements ChatgptService {
 
 
     @Override
-    public String sendMsgString(Boolean useToken, Long conversationId, String prompt) {
+    public String sendMsgString(Boolean useToken, String prompt) {
         // 获取SecurityContextHolder中的用户id, 判断该会话是否属于当前用户
         Integer userId = ShiroUtils.getUserId();
         if (userId == null) {
@@ -200,19 +201,20 @@ public class ChatgptServiceImpl implements ChatgptService {
 
         // 1、设置api key
         String key;
-        if (useToken) {
-            // 如果选择了token支付方式，检查token数
-            if (user.getGptTokenCount() > 0 ) {
-                key = apiKey;
-            }
-            else {
-                throw new ServiceFailedException(NO_Token_Count);
-            }
-        }
-        else {
-            // 使用用户账户设置的API Key
-            key = user.getUserApiKey();
-        }
+//        if (useToken && user.getGptTokenCount()!=null) {
+//            // 如果选择了token支付方式，检查token数
+//            if (user.getGptTokenCount() > 0 ) {
+//                key = apiKey;
+//            }
+//            else {
+//                throw new ServiceFailedException(NO_Token_Count);
+//            }
+//        }
+//        else {
+//            // 使用用户账户设置的API Key
+//            key = user.getUserApiKey();
+//        }
+        key = apiKey;
 
         ChatGPT chatGPT = ChatGPT.builder()
                 .apiKey(key)
@@ -232,14 +234,11 @@ public class ChatgptServiceImpl implements ChatgptService {
                 .build();
         ChatCompletionResponse response = chatGPT.chatCompletion(chatCompletion);
 
-//        // 保存历史信息
-//        saveMessage(conversationId, prompt, DIRECTION_QUESTION);
-//        saveMessage(conversationId, msg, DIRECTION_ANSWER);
-        // 如果使用token支付，扣除token，更新账户信息
-        if (useToken) {
-            user.setGptTokenCount(user.getGptTokenCount() - 1);
-            userService.updateUserById(userById);
-        }
+//        // 如果使用token支付，扣除token，更新账户信息
+//        if (useToken) {
+//            user.setGptTokenCount(user.getGptTokenCount() - 1);
+//            userService.updateUserById(userById);
+//        }
 
         return response.toPlainString();
     }

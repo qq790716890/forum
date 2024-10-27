@@ -17,8 +17,12 @@ public class MsgModel {
     // 消息类型
     private String msgType;
 
+    /**
+     * 注意：这里channelType若只设置可读，则只能被序列化，发出去的话不会读取出来。
+     * 这里需要能把字段反序列化出来，所以设置的读和写
+     */
     // 通道类型
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // 只会反序列化(json -> obj)，不会序列化(obj -> json)
+    @JsonProperty(access = JsonProperty.Access.READ_WRITE) // 只会反序列化(json -> obj)，不会序列化(obj -> json)
     private String channelType;
 
     // 数据
