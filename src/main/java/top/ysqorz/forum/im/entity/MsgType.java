@@ -13,6 +13,7 @@ public enum MsgType {
     // 业务类型的消息
     DANMU,
     CHAT_FRIEND,
+    CHAT_SYSTEM,
     CHAT_GROUP,
     CHAT_NOTIFICATION;
 

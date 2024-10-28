@@ -1,5 +1,6 @@
 package top.ysqorz.forum.im.handler;
 
+import cn.hutool.core.lang.UUID;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -36,32 +37,15 @@ public class ChatGPTMsgHandler extends NonFunctionalMsgHandler<ChatFriendMsg> {
     private final SystemUserCache systemUserCache;
 
     public ChatGPTMsgHandler() {
-        super(MsgType.CHAT_FRIEND, ChannelType.CHAT);
+        super(MsgType.CHAT_SYSTEM, ChannelType.GPT);
         this.chatgptService = SpringUtils.getBean(ChatgptService.class);
         this.systemUserCache = SpringUtils.getBean(SystemUserCache.class);
-    }
-
-    protected boolean checkMsgType(MsgModel msg) {
-        try {
-            // 注意不能下面这样写，因为本质上他是 linkedhashMap
-            JsonNode jsonNode = JsonUtils.objToNode(msg.getData());
-            Integer receiverId = jsonNode.get("receiverId").asInt();
-
-            Integer gptId = systemUserCache.getSystemUserByEmail(Constant.GPT_EMAIL).getId();
-            boolean ret = MsgType.CHAT_FRIEND.name().equalsIgnoreCase(msg.getMsgType())
-                    && ChannelType.CHAT.name().equalsIgnoreCase(msg.getChannelType())
-                    &&   receiverId.equals(gptId);
-            return ret;
-        }catch (Throwable e){
-            // omit the error
-        }
-        return false;
     }
 
     @Override
     protected Set<String> queryServersChannelLocated(ChatFriendMsg msg) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
-        return redisService.getWsServers(this.getChannelType(), msg.getSenderId().toString());
+        return redisService.getWsServers(ChannelType.CHAT, msg.getSenderId().toString());
     }
 
     @Override
@@ -77,7 +61,7 @@ public class ChatGPTMsgHandler extends NonFunctionalMsgHandler<ChatFriendMsg> {
                 setContent(gptAnswer).
                 setSenderId(gptId).
                 setReceiverId(msg.getSenderId()).
-                setId(msg.getId()).
+                setId(UUID.randomUUID().toString()).
                 setSignFlag(msg.getSignFlag()).
                 setCreateTime(LocalDateTime.now());
         MsgModel newMsg = new MsgModel(MsgType.CHAT_FRIEND, ChannelType.CHAT, ansChatMsg);

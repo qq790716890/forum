@@ -50,6 +50,7 @@ public class MsgCenter {
         if (handler == null || handler.getMsgType() == null || handler.getChannelType() == null) {
             return instance;
         }
+        // 这里需要注意：只允许一种类型的消息有一种handler！！！
         String msgType = handler.getMsgType().name();
         if (addedMsgTypes.contains(msgType)) {
             return instance;

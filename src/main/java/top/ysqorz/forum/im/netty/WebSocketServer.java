@@ -65,8 +65,8 @@ public class WebSocketServer implements ChannelFutureListener {
     private void initMsgHandlers() {
         MsgCenter.getInstance()
                 .addHandlerAtLast(new DanmuMsgHandler())
-                .addHandlerAtLast(new ChatGPTMsgHandler())
                 .addHandlerAtLast(new ChatFriendMsgHandler())
+                .addHandlerAtLast(new ChatGPTMsgHandler())  // 由 ChatFriendMsgHandler 判断是否为发送给GPT的消息
                 .addHandlerAtLast(new ChatNotificationHandler());
         log.info("消息处理器初始化成功");
     }
