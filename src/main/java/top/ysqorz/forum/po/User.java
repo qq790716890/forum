@@ -159,4 +159,10 @@ public class User implements Serializable {
      */
     @Column(name = "baidu_id")
     private String baiduId;
+
+    /**
+     * githubId
+     */
+    @Column(name = "github_id")
+    private String githubId;
 }
