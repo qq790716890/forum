@@ -256,7 +256,7 @@ public class UserServiceImpl implements UserService {
                 .setJwtSalt("")
                 .setPhoto("/admin/assets/images/defaultUserPhoto.jpg");
 
-        userMapper.insertSelective(user);
+        userMapper.insertUseGeneratedKeys(user);
         this.addInitSystemFriend(user.getId());
         // 激活邮件
         Context context = new Context();
@@ -337,13 +337,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Activation activation(String username, String code) {
         Example example = new Example(User.class);
-        example.createCriteria().andEqualTo("username", username).andEqualTo("activationCode", code);
+        example.createCriteria().andEqualTo("username", username).andEqualTo("activationCode", "-1");
         User user = userMapper.selectOneByExample(example);
-        if (user == null) return Activation.NOT_PAIR;
-        if (user.getActivationCode() == null || user.getActivationCode().equals("-1")) {
+        if (user !=null){
             return Activation.REPEAT;
-        } else if (user.getActivationCode().equals(code)) {
-            userMapper.updateActivated(user.getId());
+        }
+        example.clear();
+        example.createCriteria().andEqualTo("username", username).andEqualTo("activationCode", code);
+        User userToActive = userMapper.selectOneByExample(example);
+        if (userToActive == null) return Activation.NOT_PAIR;
+        else if (userToActive.getActivationCode().equals(code)) {
+            userMapper.updateActivated(userToActive.getId());
             return Activation.SUCCESS;
         } else {
             return Activation.FAIL;

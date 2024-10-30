@@ -27,7 +27,7 @@ spring:
 # 自定义 变量
 community:
   path:
-    domain: http://localhost:8080
+    domain: http://127.0.0.1:8080
 
 
 
