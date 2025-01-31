@@ -109,10 +109,10 @@
                    style="font-size: 22px;"></a>
             </li>
             <!--            百度登录-->
-            <li class="layui-nav-item layui-hide-xs" th:if="!${loginUser?.id}">
-                <a th:href="@{/user/oauth/baidu/authorize}" target="_parent" class="myiconfont icon-baiduwangpan"
-                   style="font-size: 22px;"></a>
-            </li>
+<!--            <li class="layui-nav-item layui-hide-xs" th:if="!${loginUser?.id}">-->
+<!--                <a th:href="@{/user/oauth/baidu/authorize}" target="_parent" class="myiconfont icon-baiduwangpan"-->
+<!--                   style="font-size: 22px;"></a>-->
+<!--            </li>-->
             <!-- 登入后的状态 -->
             <li class="layui-nav-item" th:if="${loginUser?.id}">
                 <a class="fly-nav-avatar" href="javascript:;">
