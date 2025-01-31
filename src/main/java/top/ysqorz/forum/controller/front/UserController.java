@@ -125,7 +125,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "/activation", method = RequestMethod.GET)
-    public String activation(Model model, @RequestParam String username, @RequestParam String code){
+    public String activation(Model model, @RequestParam String username, @RequestParam(required = false) String code){
         Activation result = userService.activation(username, code);
         if (result == Activation.SUCCESS){
             model.addAttribute("msg","激活成功，您的账号已经可以正常使用了！");

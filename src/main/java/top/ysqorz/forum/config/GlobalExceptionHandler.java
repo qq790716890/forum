@@ -24,6 +24,7 @@ import top.ysqorz.forum.utils.CommonUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -127,7 +128,7 @@ public class GlobalExceptionHandler {
         modelAndView.addObject("code", res.getCode())
                 .addObject("msg", res.getMsg())
                 .addObject("data", res.getData())
-                .addObject("time", res.getTime());
+                .addObject("time", DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(res.getTime()));
         return modelAndView;
     }
 
